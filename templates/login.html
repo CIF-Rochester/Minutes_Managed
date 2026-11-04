@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Login -- CIF Minutes{% endblock %}
+
+{% block content %}
+<article class="post">
+    <div class="post-content">
+        <h1>CIF Admin Login</h1>
+        <p>Sign in here to add minutes to the website.  Only admins may sign in.  </p>
+
+        <form action="{{ url_for('login') }}" method="POST">
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        required
+                        autocomplete="username"
+                        placeholder="e.g. ttest21"
+                    >
+                </div>
+                <div class="form-group full-width">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+            </div>
+            <div style="margin-top: 25px;">
+                <button type="submit" class="btn" style="width: 100%; text-align: center;">
+                    Log In
+                </button>
+            </div>
+        </form>
+    </div>
+</article>
+{% endblock %}
