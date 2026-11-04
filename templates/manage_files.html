@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Management -- CIF Minutes{% endblock %}
+
+{% block content %}
+<article class="post post-large">
+    <div class="post-content">
+        <div class="dashboard-header-section">
+            <div class="header-welcome-text">
+                <h1>Minute Management!</h1>
+                <p>Current Path: <code>{{ admin_managed_dir }}/{{ current_path }}</code></p>
+            </div>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger header-logout-btn">
+                Logout
+            </a>
+        </div>
+        <div class="portal-section" style="margin-top: 10px; border-top: none; padding-top: 0;">
+            <h2>Upload Files or Folders</h2>
+            <p>Current Path: <code>{{ admin_managed_dir }}/{{ current_path }}</code></p>
+            <form action="{{ url_for('nfs_add', path=current_path) }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="current_path" value="{{ current_path }}">
+                <div style="margin-bottom: 20px;">
+                    <label for="file_loose" style="display: block; margin-bottom: 8px; font-weight: bold;">Upload Individual File(s)</label>
+                    <input type="file" id="file_loose" name="file" multiple style="padding: 12px; background: #0b0b0b; color: #ffffff; border: 1px solid #006600; border-radius: 8px; width: 100%; box-sizing: border-box; cursor: pointer;">
+                    <small style="color: #aaaaaa; display: block; margin-top: 6px;">Select one or multiple individual files using Ctrl/Shift.</small>
+                </div>
+                <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+                <div style="margin-bottom: 20px;">
+                    <label for="file_dir" style="display: block; margin-bottom: 8px; font-weight: bold;">Upload Entire Directory</label>
+                    <input type="file" id="file_dir" name="file" multiple webkitdirectory style="padding: 12px; background: #0b0b0b; color: #ffffff; border: 1px solid #006600; border-radius: 8px; width: 100%; box-sizing: border-box; cursor: pointer;">
+                    <small style="color: #aaaaaa; display: block; margin-top: 6px;">Select an entire folder to upload all contents recursively.</small>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <button type="submit" class="btn" style="width: 100%; text-align: center;">Upload to Current Folder</button>
+                </div>
+            </form>
+     </div>
+        <div class="portal-section">
+            <h2>Contents</h2>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 45%;">Name</th>
+                            <th style="width: 15%;">Type</th>
+                            <th style="width: 15%;">Size</th>
+                            <th style="width: 25%; text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if current_path %}
+                        <tr>
+                            <td colspan="4">
+                                <a href="{{ url_for('nfs_add', path=parent_path) }}" style="color: #00ff00; text-decoration: underline; font-weight: bold; display: block;">
+                                    [..] Parent Directory
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% if files %}
+                            {% for file in files %}
+                            <tr>
+                                <td>
+                                    {% if file.is_dir %}
+                                        <a href="{{ url_for('nfs_add', path=file.path) }}" style="color: #00ff00; text-decoration: underline; font-weight: bold;">
+                                            {{ file.name }}/
+                                        </a>
+                                    {% else %}
+                                        {{ file.name }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ file.type }}</td>
+                                <td>{{ file.size }}</td>
+                                <td style="text-align: center; display: flex; gap: 8px; justify-content: center;">
+                                    <a href="{{ url_for('nfs_download', path=file.path) }}" class="btn" style="padding: 6px 12px; font-size: 0.85rem; text-decoration: none;">
+                                        Download
+                                    </a>
+                                    <a href="{{ url_for('nfs_add', path=current_path, delete=file.path) }}" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.85rem; text-decoration: none;" onclick="return confirm('Are you sure you want to delete {{ file.name }}?');">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% elif not current_path %}
+                            <tr>
+                                <td colspan="4" style="color: #aaaaaa; text-align: center; padding: 20px;">This directory is currently empty.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</article>
+{% endblock %}
