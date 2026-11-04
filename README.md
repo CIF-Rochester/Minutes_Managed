@@ -6,7 +6,7 @@ The minutes are displayed based off of what exists inside of a dedicated local "
 
 This provides the advantage of the minutes being incredibly portable, being able to be migrated, pulled, or moved around as need be.  A much more elegant solution that had existed in the past.  
 
-But, with this new system arose a wee bit of a problem, how does one effectively get files *to* that local directory.  
+But, with this new system arose a wee bit of a problem, how does one effectively get files *to* that local directory?   
 
 ## Functionality
 
